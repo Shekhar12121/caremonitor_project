@@ -1,0 +1,66 @@
+<div class="list-container">
+      <mat-toolbar color="primary" class="toolbar">
+        <button mat-icon-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="toolbar-title">Items List</span>
+        <span class="spacer"></span>
+        <button mat-raised-button color="accent" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </mat-toolbar>
+
+      <div class="content">
+        @if (store.isLoading()) {
+          <div class="loading-container">
+            <mat-spinner></mat-spinner>
+            <p class="loading-text">Loading items...</p>
+          </div>
+        }
+
+        @if (store.error()) {
+          <mat-card class="error-card">
+            <mat-card-content>
+              <mat-icon class="error-icon">error</mat-icon>
+              <p class="error-message">{{ store.error() }}</p>
+              <button mat-raised-button color="primary" (click)="retry()">
+                <mat-icon>refresh</mat-icon>
+                Retry
+              </button>
+            </mat-card-content>
+          </mat-card>
+        }
+
+        @if (!store.isLoading() && !store.error() && store.items().length > 0) {
+          <mat-card class="items-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>inventory_2</mat-icon>
+                Available Items ({{ store.items().length }})
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-list>
+                @for (item of store.items(); track item.id) {
+                  <mat-list-item class="item">
+                    <mat-icon matListItemIcon>label</mat-icon>
+                    <div matListItemTitle class="item-name">{{ item.name }}</div>
+                    <div matListItemLine class="item-description">{{ item.description }}</div>
+                  </mat-list-item>
+                }
+              </mat-list>
+            </mat-card-content>
+          </mat-card>
+        }
+
+        @if (!store.isLoading() && !store.error() && store.items().length === 0) {
+          <mat-card class="empty-card">
+            <mat-card-content>
+              <mat-icon class="empty-icon">inbox</mat-icon>
+              <p class="empty-message">No items found</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </div>
